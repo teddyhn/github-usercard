@@ -123,5 +123,11 @@ body {
   margin: 3px 0 10px;
 }
 
+.card .repos {
+  display: none;
+  padding-top: 3px;
+}
 
-
+.card .repos--show {
+  display: block;
+}
