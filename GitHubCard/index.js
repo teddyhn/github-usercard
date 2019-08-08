@@ -3,6 +3,14 @@
            https://api.github.com/users/<your name>
 */
 
+let cardHolder = document.querySelector('.cards');
+
+axios.get('https://api.github.com/users/teddyhn')
+  .then(response => userCard(response.data))
+  .catch(err => {
+    console.log(err)
+  })
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -24,7 +32,18 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [
+  'tetondan',
+  'dustinmyers',
+  'justsml',
+  'luishrd',
+  'bigknell'
+];
+
+followersArray.forEach(user => {
+  axios.get(`https://api.github.com/users/${user}`)
+  .then(response => userCard(response.data))
+})
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -45,6 +64,81 @@ const followersArray = [];
 </div>
 
 */
+
+function userCard(user) {
+  console.log(user);
+  let card = document.createElement('div');
+  card.classList.add('card');
+
+  let userImg = document.createElement('img');
+  userImg.src = user.avatar_url;
+
+  let cardInfo = document.createElement('div');
+  cardInfo.classList.add('card-info');
+
+  let name = document.createElement('h3');
+  name.classList.add('name');
+  name.textContent = user.name;
+
+  let userName = document.createElement('p');
+  userName.classList.add('username');
+  userName.textContent = user.login;
+
+  let location = document.createElement('p');
+  location.textContent = `Location: ${user.location}`;
+
+  let profile = document.createElement('p');
+  profile.textContent = 'Profile: ';
+  profile.innerHTML += `<a href=${user.html_url}>${user.html_url}</a>`
+
+  let followers = document.createElement('p');
+  followers.textContent = `Followers: ${user.followers}`;
+
+  let following = document.createElement('p')
+  following.textContent = `Following: ${user.following}`;
+
+  let bio = document.createElement('p');
+  bio.textContent = `Bio: ${user.bio}`;
+
+  let button = document.createElement('button');
+  button.type = 'button';
+  button.classList.add('button');
+  button.textContent = 'Check my repos';
+
+  let reposNumber = document.createElement('p');
+  reposNumber.classList.add('repos');
+  reposNumber.textContent =`Number of repos: ${user.public_repos}`;
+
+  let reposLink = document.createElement('p');
+  reposLink.classList.add('repos');
+  reposLink.textContent = 'Link: ';
+  reposLink.innerHTML += `<a href=${user.repos_url}>${user.repos_url}</a>`
+
+
+  card.appendChild(userImg);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(userName);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+  cardInfo.appendChild(button);
+  cardInfo.appendChild(reposNumber);
+  cardInfo.appendChild(reposLink);
+
+
+  button.addEventListener('click', evt => {
+    reposNumber.classList.toggle('repos--show');
+    reposLink.classList.toggle('repos--show');
+  })
+
+  let cardContainer = document.querySelector('.cards');
+  cardContainer.appendChild(card);
+
+  return card;
+}
 
 /* List of LS Instructors Github username's: 
   tetondan
